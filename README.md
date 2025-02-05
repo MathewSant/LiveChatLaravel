@@ -16,7 +16,7 @@ Instalação
 
 1.  **Clone o repositório:**
     
-        git clone https://github.com/seu-usuario/seu-repositorio.git
+        git clone https://github.com/MathewSant/LiveChatLaravel
     
 2.  **Entre no diretório do projeto:**
     
