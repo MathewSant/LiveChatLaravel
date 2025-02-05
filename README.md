@@ -20,7 +20,7 @@ Instalação
     
 2.  **Entre no diretório do projeto:**
     
-        cd seu-repositorio
+        cd LiveChatLaravel
     
 3.  **Instale as dependências do Composer:**
     
