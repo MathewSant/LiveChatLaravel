@@ -35,18 +35,16 @@ class Chat extends Component
 
     public function loadMessages()
     {
-        // Carrega as últimas 10 mensagens (ajuste conforme necessário)
-        $this->messages = Message::latest()->take(10)->get()->map(function ($message) {
-            return [
-                'name'    => $message->name,
-                'message' => $message->message,
-            ];
-        })->toArray();
-
-        if (empty($this->messages)) {
-            $this->messages = [];
-        }
+        $this->messages = Message::latest()->take(10)->get()
+            ->reverse()
+            ->map(function ($message) {
+                return [
+                    'name'    => $message->name,
+                    'message' => $message->message,
+                ];
+            })->toArray();
     }
+    
 
     public function sendMessage()
     {
