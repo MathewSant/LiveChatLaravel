@@ -3,19 +3,30 @@
 namespace App\Livewire;
 
 use App\Events\MessageSent;
+use App\Events\UserTyping;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use App\Models\Message;
-use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Auth;
 
-#[Layout('layouts.app')] // Aqui definimos o layout corretamente
+#[Layout('layouts.app')]
 class Chat extends Component
 {
-    public $name;
     public $message;
     public $messages = [];
+    
+    // Adicione o listener para atualizar as mensagens
+    protected $listeners = [
+        'messageReceived' => 'loadMessages',
+    ];
 
-    protected $listeners = ['messageReceived' => 'loadMessages'];
+    public function emitTyping()
+    {
+        $user = Auth::user();
+        if ($user) {
+            broadcast(new UserTyping($user->name));
+        }
+    }
 
     public function mount()
     {
@@ -24,51 +35,45 @@ class Chat extends Component
 
     public function loadMessages()
     {
+        // Carrega as últimas 10 mensagens (ajuste conforme necessário)
         $this->messages = Message::latest()->take(10)->get()->map(function ($message) {
             return [
-                'name' => $message->name,
+                'name'    => $message->name,
                 'message' => $message->message,
             ];
         })->toArray();
-        
-        // Garante que sempre seja um array
+
         if (empty($this->messages)) {
             $this->messages = [];
         }
     }
-    
-    
-    
 
     public function sendMessage()
     {
         $this->validate([
-            'name' => 'required',
             'message' => 'required',
         ]);
-    
-        // Cria a mensagem no banco de dados
+
+        $user = Auth::user();
+
         $message = Message::create([
-            'name' => $this->name,
+            'user_id' => $user->id,
+            'name'    => $user->name,
             'message' => $this->message,
         ]);
-    
-        // Dispara o evento para o broadcast (para as outras abas)
-        broadcast(new MessageSent($message))->toOthers();
-    
-        // Atualiza a lista de mensagens (pode ser refinado para exibir ordenação desejada)
+
+        broadcast(new MessageSent($message));
+
+        // Atualiza localmente a lista de mensagens
         $this->messages = array_merge($this->messages ?? [], [
             [
-                'name' => $message->name,
+                'name'    => $message->name,
                 'message' => $message->message,
             ]
         ]);
-    
-        // Limpa o campo de mensagem
+
         $this->message = '';
     }
-    
-    
 
     public function render()
     {

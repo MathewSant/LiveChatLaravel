@@ -9,3 +9,5 @@ window.Echo = new Echo({
     forceTLS: false,
     disableStats: true,
 });
+
+console.log(window.Echo);

@@ -4,15 +4,8 @@ import laravel from 'laravel-vite-plugin';
 export default defineConfig({
     plugins: [
         laravel({
-            input: ['resources/css/app.css', 'resources/js/app.js'], // Importa app.js
+            input: ['resources/css/app.css', 'resources/js/app.js'],
             refresh: true,
         }),
     ],
-    server: {
-        host: 'localhost',
-        port: 5173, // Garante que o Vite rode na porta correta
-        watch: {
-            usePolling: true,
-        },
-    },
 });
