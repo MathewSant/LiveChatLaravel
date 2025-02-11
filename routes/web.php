@@ -3,9 +3,10 @@
 use App\Http\Controllers\ProfileController;
 use App\Livewire\Chat;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route(Auth::check() ? 'dashboard' : 'login');
 });
 
 Route::get('/dashboard', function () {

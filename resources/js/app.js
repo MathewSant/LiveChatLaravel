@@ -1,4 +1,5 @@
 import './bootstrap';
+import './emojiPicker';
 
 import Alpine from 'alpinejs';
 
