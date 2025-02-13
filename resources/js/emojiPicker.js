@@ -34,10 +34,6 @@ document.addEventListener("DOMContentLoaded", function () {
         "absolute",
         "bottom-16",
         "left-0",
-        "bg-white",
-        "border",
-        "rounded-lg",
-        "shadow-md",
         "z-50"
     );
 
@@ -64,6 +60,26 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    function colorPicker(){
+        if (emojiPicker.shadowRoot) {
+            const colorPicker = emojiPicker.shadowRoot.querySelector(".picker");
+            const pad_top = emojiPicker.shadowRoot.querySelector(".pad-top");
+            const skintone = emojiPicker.shadowRoot.querySelector(".search-row");
+            const emojiMenu = emojiPicker.shadowRoot.querySelector(".emoji-menu");
+            if (colorPicker) {
+                colorPicker.style.cssText = "background-color: #bdc1ca; border-radius: 0.5rem; padding: 0.5rem; margin: 0.5rem; ";
+            }
+            if(pad_top){
+                pad_top.remove();
+            }
+            if(skintone){
+                skintone.remove();
+            }
+            if(emojiMenu){
+                emojiMenu.style.cssText = "padding-top: 0.5rem; padding-bottom: 0.5rem;";
+            }
+        }
+    }
     function adjustSearchRow() {
         if (emojiPicker.shadowRoot) {
             const searchRow = emojiPicker.shadowRoot.querySelector(".search-row");
@@ -82,6 +98,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         removeTitlesFromEmojiPicker();
                         removeSearchWrapper();
                         adjustSearchRow();
+                        colorPicker();
                     }
                 });
             });
@@ -100,6 +117,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const chatInput = document.getElementById("chat-input");
     let isPickerOpen = false;
 
+    if (emojiButton) { 
     emojiButton.addEventListener("click", function (event) {
         event.preventDefault();
 
@@ -108,8 +126,8 @@ document.addEventListener("DOMContentLoaded", function () {
             isPickerOpen = false;
         } else {
             const rect = emojiButton.getBoundingClientRect();
-            emojiPicker.style.left = `${rect.left}px`;
-            emojiPicker.style.top = `${rect.top - 400}px`; // Ajuste para aparecer acima do botão
+            emojiPicker.style.left = `${rect.left -10}px`;
+            emojiPicker.style.top = `${rect.top - 410}px`; // Ajuste para aparecer acima do botão
             emojiPicker.classList.remove("hidden");
             isPickerOpen = true;
 
@@ -118,10 +136,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 removeTitlesFromEmojiPicker();
                 removeSearchWrapper();
                 adjustSearchRow();
+                colorPicker();
             }, 200);
         }
     });
-
+    }
     emojiPicker.addEventListener("emoji-click", (event) => {
         chatInput.value += event.detail.unicode;
         chatInput.dispatchEvent(new Event("input")); // Para atualizar Livewire
