@@ -3,12 +3,14 @@
 namespace App\Livewire;
 
 use App\Events\MessageSent;
+use App\Events\UserStoppedTyping;
 use App\Events\UserTyping;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use App\Models\Message;
 use Illuminate\Support\Facades\Auth;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Cache;
 
 #[Layout('layouts.app')]
 class Chat extends Component
@@ -27,10 +29,16 @@ class Chat extends Component
     {
         $user = Auth::user();
         if ($user) {
-            broadcast(new UserTyping($user->name));
+            // Permite disparar imediatamente se não houver cache
+            if (!Cache::has("typing_{$user->id}")) {
+                broadcast(new UserTyping($user->name))->toOthers();
+                // Pode ajustar para um tempo menor, como 500ms
+                Cache::put("typing_{$user->id}", true, now()->addMilliseconds(500));
+            }
         }
     }
-
+    
+    
     public function mount()
     {
         $this->loadMessages();
@@ -47,16 +55,18 @@ class Chat extends Component
                     'attachment' => $message->attachment,
                 ];
             })->toArray();
+            
+        // Dispara um evento para Alpine.js atualizar as mensagens no front-end
+        $this->dispatch('updateMessages', ['messages' => $this->messages]);
     }
 
     public function sendMessage()
     {
         $this->validate([
-            'message' => 'nullable|string', // Pode ser nulo se houver um anexo
-            'attachment' => 'nullable|file|max:2048', // Pode ser nulo se houver uma mensagem
+            'message' => 'nullable|string',
+            'attachment' => 'nullable|file|max:2048',
         ]);
     
-        // Verifica se a mensagem e o anexo estão ambos vazios
         if (empty($this->message) && !$this->attachment) {
             $this->addError('message', 'Digite uma mensagem ou envie um arquivo.');
             return;
@@ -65,7 +75,6 @@ class Chat extends Component
         $user = Auth::user();
         $attachmentPath = null;
     
-        // Se um arquivo for enviado, salva no storage
         if ($this->attachment) {
             $attachmentPath = $this->attachment->store('uploads', 'public');
         }
@@ -73,30 +82,24 @@ class Chat extends Component
         $message = Message::create([
             'user_id'    => $user->id,
             'name'       => $user->name,
-            'message'    => $this->message ?? '', // Evita NULL
+            'message'    => $this->message ?? '',
             'attachment' => $attachmentPath,
         ]);
     
         broadcast(new MessageSent($message));
+        broadcast(new UserStoppedTyping($user->name))->toOthers();
+
+        $this->loadMessages();
     
-        // Atualiza a lista de mensagens
-        $this->messages[] = [
-            'name'       => $message->name,
-            'message'    => $message->message,
-            'attachment' => $attachmentPath,
-        ];
-    
-        // Limpa os campos
         $this->message = '';
         $this->attachment = null;
-    
-        // Dispara um evento para limpar o input no front-end
+
         $this->dispatch('clearChatInput');
     }
     
 
     public function render()
     {
-        return view('livewire.chat');
+        return view('livewire.chat', ['messages' => $this->messages]);
     }
 }

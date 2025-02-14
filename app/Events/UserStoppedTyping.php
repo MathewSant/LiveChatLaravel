@@ -7,17 +7,16 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use App\Models\Message;
 
-class MessageSent implements ShouldBroadcastNow
+class UserStoppedTyping implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $message;
+    public $name;
 
-    public function __construct(Message $message)
+    public function __construct($name)
     {
-        $this->message = $message;
+        $this->name = $name;
     }
 
     public function broadcastOn()
@@ -25,9 +24,8 @@ class MessageSent implements ShouldBroadcastNow
         return new Channel('chat');
     }
 
-    // Adicione esse método:
     public function broadcastAs()
     {
-        return 'MessageSent';
+        return 'UserStoppedTyping';
     }
 }
