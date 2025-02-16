@@ -1,4 +1,14 @@
-<header class="bg-blue-600 text-white text-center py-4">
-    <h1 class="text-xl font-bold">Chat em Tempo Real</h1>
-    <p class="text-sm">Bem-vindo, {{ $user->name }}</p>
-</header>
+<!-- resources/views/components/chat/header.blade.php -->
+
+<div class="p-4 bg-blue-500 text-white flex items-center justify-between">
+    <div>
+        <h1 class="text-lg font-bold">
+            @if(isset($selectedUser))
+                Conversa com {{ $selectedUser->name }}
+            @else
+                Chat Público
+            @endif
+        </h1>
+    </div>
+    <!-- Outras opções, se necessário -->
+</div>

@@ -1,13 +1,35 @@
-<div class="max-w-md mx-auto bg-white shadow-lg rounded-lg overflow-hidden flex flex-col h-[90vh]">
-    {{-- Cabeçalho do chat --}}
-    @include('components.chat.header', ['user' => auth()->user()])
+<!-- resources/views/livewire/chat.blade.php -->
 
-    {{-- Indicador de digitando --}}
-    @include('components.chat.typing-indicator', ['currentUser' => auth()->user()->name])
+<div class="flex h-[90vh]">
+    <!-- Sidebar: Lista de usuários -->
+    <div class="w-1/4 bg-gray-200 p-4 overflow-y-auto">
+        @include('components.chat.user-list', [
+            'users' => $users,
+            'selectedUser' => $selectedUser
+        ])
+    </div>
 
-    {{-- Lista de mensagens --}}
-    @include('components.chat.message-list', ['messages' => $messages])
+    <!-- Área do Chat -->
+    <div class="flex-1 bg-white shadow-lg rounded-lg flex flex-col">
+        {{-- Cabeçalho do chat (pode exibir nome do destinatário, se houver) --}}
+        @include('components.chat.header', [
+            'user' => auth()->user(),
+            'selectedUser' => $selectedUser
+        ])
 
-    {{-- Rodapé do chat --}}
-    @include('components.chat.footer', ['attachment' => $attachment])
+        {{-- Indicador de digitando --}}
+        @include('components.chat.typing-indicator', [
+            'currentUser' => auth()->user()->name
+        ])
+
+        {{-- Lista de mensagens --}}
+        @include('components.chat.message-list', [
+            'messages' => $messages
+        ])
+
+        {{-- Rodapé do chat --}}
+        @include('components.chat.footer', [
+            'attachment' => $attachment
+        ])
+    </div>
 </div>

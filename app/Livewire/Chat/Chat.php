@@ -1,26 +1,35 @@
 <?php
 
+// app/Livewire/Chat/Chat.php
+
 namespace App\Livewire\Chat;
 
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use App\Services\ChatService;
+use App\Services\Chat\ChatService;
+use App\Livewire\Chat\Traits\ManagesMessages;
+use App\Livewire\Chat\Traits\HandlesTyping;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 #[Layout('layouts.app')]
 class Chat extends Component
 {
-    use WithFileUploads;
+    use WithFileUploads, ManagesMessages, HandlesTyping;
 
     public $message;
     public $messages = [];
     public $attachment;
 
+    // Alterado: Armazena apenas o ID do usuário selecionado
+    public $users = [];
+    public $selectedUserId = null;
+
     protected $listeners = [
         'messageReceived' => 'loadMessages',
     ];
 
-    // Injeção do serviço do chat
     protected ChatService $chatService;
 
     public function boot(ChatService $chatService)
@@ -31,52 +40,25 @@ class Chat extends Component
     public function mount()
     {
         $this->loadMessages();
-    }
-
-    public function loadMessages()
-    {
-        $this->messages = $this->chatService->loadMessages();
-        $this->dispatch('updateMessages', ['messages' => $this->messages]);
-    }
-
-    public function sendMessage()
-    {
-        $this->validate([
-            'message'    => 'nullable|string',
-            'attachment' => 'nullable|file|max:2048',
-        ]);
-
-        if (empty($this->message) && !$this->attachment) {
-            $this->addError('message', 'Digite uma mensagem ou envie um arquivo.');
-            return;
-        }
-
-        $attachmentPath = null;
-        if ($this->attachment) {
-            $attachmentPath = $this->attachment->store('uploads', 'public');
-        }
-
-        // Envia a mensagem via service
-        $this->chatService->sendMessage($this->message, $attachmentPath);
-
-        // Atualiza a lista de mensagens
-        $this->loadMessages();
-
-        // Reseta os campos
-        $this->message = '';
-        $this->attachment = null;
-
-        $this->dispatch('clearChatInput');
-        $this->dispatch('forceScrollToBottom');
-    }
-
-    public function emitTyping()
-    {
-        $this->chatService->emitTyping();
+        // Carrega todos os usuários, exceto o atual
+        $this->users = User::where('id', '!=', Auth::id())->get();
     }
 
     public function render()
     {
-        return view('livewire.chat', ['messages' => $this->messages]);
+        // Recupera o usuário selecionado para exibição (se houver)
+        $selectedUser = $this->selectedUserId ? User::find($this->selectedUserId) : null;
+
+        return view('livewire.chat', [
+            'messages'     => $this->messages,
+            'users'        => $this->users,
+            'selectedUser' => $selectedUser,
+        ]);
     }
-}
+   
+    public function selectUser($userId)
+    {
+        $this->selectedUserId = $userId;
+        $this->loadMessages();
+    }
+} 

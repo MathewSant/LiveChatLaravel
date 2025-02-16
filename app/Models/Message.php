@@ -10,9 +10,10 @@ class Message extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
+        'recipient_id', // Certifique-se de incluir este campo
         'name',
         'message',
-        'attachment', // já adicionado
-        'user_id'
+        'attachment',
     ];
 }

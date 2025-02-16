@@ -28,4 +28,4 @@ class UserTyping implements ShouldBroadcastNow
     {
         return 'UserTyping';
     }
-}
+}   

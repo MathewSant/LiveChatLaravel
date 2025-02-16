@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Chat;
 
-use App\Repositories\MessageRepository;
+use App\Repositories\Chat\MessageRepository;
 use App\Events\MessageSent;
 use App\Events\UserStoppedTyping;
 use Illuminate\Support\Facades\Auth;
@@ -54,9 +54,7 @@ class ChatService
         return $message;
     }
 
-    /**
-     * Emite o evento de digitação, utilizando cache para evitar excesso de broadcast.
-     */
+  
     public function emitTyping()
     {
         $user = Auth::user();
@@ -64,5 +62,5 @@ class ChatService
             broadcast(new \App\Events\UserTyping($user->name))->toOthers();
             Cache::put("typing_{$user->id}", true, now()->addMilliseconds(500));
         }
-    }
+    } 
 }
