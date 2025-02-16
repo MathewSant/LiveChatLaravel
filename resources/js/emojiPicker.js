@@ -126,7 +126,7 @@ document.addEventListener("DOMContentLoaded", function () {
             isPickerOpen = false;
         } else {
             const rect = emojiButton.getBoundingClientRect();
-            emojiPicker.style.left = `${rect.left -10}px`;
+            emojiPicker.style.left = `${rect.left -330}px`;
             emojiPicker.style.top = `${rect.top - 410}px`; // Ajuste para aparecer acima do botão
             emojiPicker.classList.remove("hidden");
             isPickerOpen = true;
@@ -143,10 +143,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     emojiPicker.addEventListener("emoji-click", (event) => {
         chatInput.value += event.detail.unicode;
-        chatInput.dispatchEvent(new Event("input")); // Para atualizar Livewire
-        // emojiPicker.classList.add("hidden");
-        // isPickerOpen = false;
-        // chatInput.focus();
+        chatInput.dispatchEvent(new Event("input")); 
     });
 
     document.addEventListener("click", function (event) {

@@ -1,5 +1,7 @@
 <?php
 
+// app/Services/Chat/ChatService.php
+
 namespace App\Services\Chat;
 
 use App\Repositories\Chat\MessageRepository;
@@ -18,11 +20,17 @@ class ChatService
     }
 
     /**
-     * Retorna as mensagens já formatadas para exibição.
+     * Retorna as mensagens formatadas para exibição.
+     * Se $recipientId for informado, carrega apenas as mensagens privadas da conversa.
      */
-    public function loadMessages()
+    public function loadMessages($recipientId = null)
     {
-        $messages = $this->repository->getAllMessages();
+        if ($recipientId) {
+            $messages = $this->repository->getPrivateMessages($recipientId);
+        } else {
+            $messages = $this->repository->getAllMessages();
+        }
+
         return $messages->map(function ($message) {
             return [
                 'name'       => $message->name,
@@ -35,15 +43,16 @@ class ChatService
     /**
      * Cria e envia a mensagem.
      */
-    public function sendMessage(?string $text, $attachmentPath = null)
+    public function sendMessage(?string $text, $attachmentPath = null, $recipientId = null)
     {
         $user = Auth::user();
 
         $data = [
-            'user_id'    => $user->id,
-            'name'       => $user->name,
-            'message'    => $text ?? '',
-            'attachment' => $attachmentPath,
+            'user_id'      => $user->id,
+            'recipient_id' => $recipientId,
+            'name'         => $user->name,
+            'message'      => $text ?? '',
+            'attachment'   => $attachmentPath,
         ];
 
         $message = $this->repository->createMessage($data);
@@ -54,7 +63,6 @@ class ChatService
         return $message;
     }
 
-  
     public function emitTyping()
     {
         $user = Auth::user();
@@ -62,5 +70,5 @@ class ChatService
             broadcast(new \App\Events\UserTyping($user->name))->toOthers();
             Cache::put("typing_{$user->id}", true, now()->addMilliseconds(500));
         }
-    } 
-}
+    }
+} 
