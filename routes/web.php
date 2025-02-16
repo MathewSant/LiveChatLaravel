@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-use App\Livewire\Chat;
+use App\Livewire\Chat\Chat;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
