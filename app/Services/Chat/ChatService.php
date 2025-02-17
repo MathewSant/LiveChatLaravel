@@ -36,9 +36,11 @@ class ChatService
                 'name'       => $message->name,
                 'message'    => $message->message,
                 'attachment' => $message->attachment,
+                'profile_image' => $message->user ? $message->user->profile_image : null,
             ];
         })->toArray();
     }
+    
 
     /**
      * Cria e envia a mensagem.

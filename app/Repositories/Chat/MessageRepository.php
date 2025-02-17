@@ -1,7 +1,5 @@
 <?php
 
-// app/Repositories/Chat/MessageRepository.php
-
 namespace App\Repositories\Chat;
 
 use App\Models\Message;
@@ -11,7 +9,11 @@ class MessageRepository
 {
     public function getAllMessages()
     {
-        return Message::whereNull('recipient_id')->latest()->get()->reverse();
+        return Message::with('user') // eager load do usuário
+                      ->whereNull('recipient_id')
+                      ->latest()
+                      ->get()
+                      ->reverse();
     }
     
     /**
@@ -20,17 +22,18 @@ class MessageRepository
     public function getPrivateMessages($recipientId)
     {
         $userId = Auth::id();
-        return Message::where(function ($query) use ($userId, $recipientId) {
-                    $query->where('user_id', $userId)
-                          ->where('recipient_id', $recipientId);
-                })
-                ->orWhere(function ($query) use ($userId, $recipientId) {
-                    $query->where('user_id', $recipientId)
-                          ->where('recipient_id', $userId);
-                })
-                ->latest()
-                ->get()
-                ->reverse();
+        return Message::with('user') // eager load do usuário
+            ->where(function ($query) use ($userId, $recipientId) {
+                $query->where('user_id', $userId)
+                      ->where('recipient_id', $recipientId);
+            })
+            ->orWhere(function ($query) use ($userId, $recipientId) {
+                $query->where('user_id', $recipientId)
+                      ->where('recipient_id', $userId);
+            })
+            ->latest()
+            ->get()
+            ->reverse();
     }
 
     public function createMessage(array $data)
