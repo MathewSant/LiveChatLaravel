@@ -23,25 +23,26 @@ class ChatService
      * Retorna as mensagens formatadas para exibição.
      * Se $recipientId for informado, carrega apenas as mensagens privadas da conversa.
      */
-    public function loadMessages($recipientId = null)
-    {
-        if ($recipientId) {
-            $messages = $this->repository->getPrivateMessages($recipientId);
-        } else {
-            $messages = $this->repository->getAllMessages();
-        }
-
-        return $messages->map(function ($message) {
-            return [
-                'name'       => $message->name,
-                'message'    => $message->message,
-                'attachment' => $message->attachment,
-                'profile_image' => $message->user ? $message->user->profile_image : null,
-            ];
-        })->toArray();
-    }
-    
-
+     public function loadMessages($recipientId = null)
+     {
+         if ($recipientId) {
+             $messages = $this->repository->getPrivateMessages($recipientId);
+         } else {
+             $messages = $this->repository->getAllMessages();
+         }
+     
+         return $messages->map(function ($message) {
+             return [
+                 'user_id'       => $message->user_id,
+                 'name'          => $message->name,
+                 'message'       => $message->message,
+                 'attachment'    => $message->attachment,
+                 'profile_image' => $message->user ? $message->user->profile_image : null,
+                 'created_at'    => $message->created_at->format('H:i'),
+             ];
+         })->toArray();
+     }
+     
     /**
      * Cria e envia a mensagem.
      */

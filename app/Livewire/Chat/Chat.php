@@ -48,12 +48,16 @@ class Chat extends Component
     {
         // Recupera o usuário selecionado para exibição (se houver)
         $selectedUser = $this->selectedUserId ? User::find($this->selectedUserId) : null;
+        $isPrivateChat = $selectedUser ? true : false;
+        
         return view('livewire.chat', [
             'messages'     => $this->messages,
             'users'        => $this->users,
             'selectedUser' => $selectedUser,
+            'isPrivateChat' => $isPrivateChat,
         ]);
     }
+    
    
     public function selectUser($userId)
     {
