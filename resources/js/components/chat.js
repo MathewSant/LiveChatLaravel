@@ -16,27 +16,14 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Função para verificar se o scroll está no final
-    function isChatScrolledToBottom(chatBox) {
-        return chatBox.scrollHeight - chatBox.clientHeight <= chatBox.scrollTop + 5;
-    }
-
-    // Rolagem automática ao adicionar mensagens, se já estiver no final antes da atualização
-    document.addEventListener('livewire:update', () => {
-        const chatBox = document.getElementById('chat-box');
-        if (chatBox) {
-            const shouldScroll = isChatScrolledToBottom(chatBox);
-            if (shouldScroll) {
-                chatBox.scrollTop = chatBox.scrollHeight;
-            }
-        }
-    });
 
     // Força rolagem para o final após o envio de uma nova mensagem
     window.addEventListener('forceScrollToBottom', () => {
         const chatBox = document.getElementById('chat-box');
         if (chatBox) {
-            chatBox.scrollTop = chatBox.scrollHeight;
+            setTimeout(() => {
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }, 100);
         }
     });
 
@@ -48,4 +35,6 @@ document.addEventListener("DOMContentLoaded", function () {
             chatInput.focus();
         }
     });
+
+    
 });
