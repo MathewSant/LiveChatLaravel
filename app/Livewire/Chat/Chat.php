@@ -64,4 +64,11 @@ class Chat extends Component
         $this->selectedUserId = $userId;
         $this->loadMessages();
     }
+    
+    public function clearSelectedUser()
+    {
+        $this->selectedUserId = null;
+        $this->loadMessages();
+    }
+
 } 

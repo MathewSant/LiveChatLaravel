@@ -1,6 +1,14 @@
 <div>
-    <h2 class="text-xl font-bold mb-4">Usuários</h2>
-    <ul>
+    <div class="flex justify-between items-center border-b pb-2 mb-2">
+        <h2 class="text-xl font-bold">Usuários</h2>
+        @if($selectedUser)
+            <button wire:click="clearSelectedUser" class="flex items-center text-sm text-blue-600 hover:text-blue-800 transition">
+                @svg('fas-arrow-left', 'h-4 w-4 mr-1') Chat Público
+            </button>
+        @endif
+    </div>
+
+    <ul class="mt-2">
         @foreach ($users as $user)
             <li wire:click="selectUser({{ $user->id }})"
                 class="flex items-center p-2 mb-1 rounded cursor-pointer transition duration-200 

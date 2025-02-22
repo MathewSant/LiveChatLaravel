@@ -10,9 +10,9 @@ class Message extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'id'; // Definir explicitamente a chave primária
-    public $incrementing = false; // Indicar que não será auto-incrementável
-    protected $keyType = 'integer'; // Ou 'integer', dependendo de como está o Snowflake
+    protected $primaryKey = 'id'; 
+    public $incrementing = false;
+    protected $keyType = 'integer'; 
 
     protected $fillable = [
         'user_id',
