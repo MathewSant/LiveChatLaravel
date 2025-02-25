@@ -1,10 +1,12 @@
-Chat em Tempo Real
-==================
+  Chat em Tempo Real – Sistema Moderno body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; background: #f9f9f9; color: #333; } h1, h2, h3 { color: #222; } pre { background: #eee; padding: 10px; border: 1px solid #ccc; overflow-x: auto; } code { background: #eee; padding: 2px 4px; } a { color: #1e90ff; text-decoration: none; } a:hover { text-decoration: underline; } hr { margin: 40px 0; border: none; border-top: 1px solid #ddd; }
 
-Este projeto é um sistema de chat em tempo real desenvolvido em **Laravel** utilizando **Livewire**, **Laravel Echo** e um servidor de broadcasting (Reverb, compatível com Pusher).
+Chat em Tempo Real – Sistema Moderno
+====================================
 
-Pré-requisitos
---------------
+Este projeto é um sistema de chat em tempo real desenvolvido em **Laravel** utilizando **Livewire**, **Laravel Echo** e o servidor de broadcasting **Reverb** (compatível com Pusher). Ele permite conversas públicas e privadas, envio de anexos e atualizações instantâneas na interface, proporcionando uma experiência interativa e moderna.
+
+Requisitos
+----------
 
 *   PHP 8.3 (ou superior) com as extensões necessárias
 *   Composer
@@ -16,122 +18,152 @@ Instalação
 
 1.  **Clone o repositório:**
     
-        git clone https://github.com/MathewSant/LiveChatLaravel
+    git clone https://github.com/MathewSant/LiveChatLaravel
     
 2.  **Entre no diretório do projeto:**
     
-        cd LiveChatLaravel
+    cd LiveChatLaravel
     
 3.  **Instale as dependências do Composer:**
     
-        composer install
+    composer install
     
 4.  **Instale as dependências do NPM:**
     
-        npm install
+    npm install
     
 5.  **Crie uma cópia do arquivo `.env.example` como `.env`:**
     
-        cp .env.example .env
+    cp .env.example .env
     
 6.  **Gere a chave da aplicação:**
     
-        php artisan key:generate
+    php artisan key:generate
     
-7.  **Configure o arquivo `.env`** conforme seu ambiente. Um exemplo de configuração:
+7.  **Configure o arquivo `.env`** conforme seu ambiente. Exemplo de configuração:
     
-        APP_NAME=Laravel
-        APP_ENV=local
-        APP_KEY=base64:...
-        APP_DEBUG=true
-        APP_URL=http://localhost
-        
-        DB_CONNECTION=mysql
-        DB_HOST=127.0.0.1
-        DB_PORT=3306
-        DB_DATABASE=chat_app
-        DB_USERNAME=root
-        DB_PASSWORD=
-        
-        BROADCAST_DRIVER=reverb
-        REVERB_APP_ID=600751
-        REVERB_APP_KEY=atf08xobqovoyb4numsu
-        REVERB_APP_SECRET=u7ja88wyahuj4jncr2uk
-        REVERB_HOST=127.0.0.1
-        REVERB_PORT=6001
-        REVERB_SCHEME=http
-        
-        VITE_REVERB_APP_KEY="atf08xobqovoyb4numsu"
-        VITE_REVERB_HOST="127.0.0.1"
-        VITE_REVERB_PORT="6001"
-        VITE_REVERB_SCHEME="http"
-        
-        VITE_PUSHER_APP_CLUSTER=mt1
+    APP\_NAME=Laravel
+    APP\_ENV=local
+    APP\_KEY=base64:jeh3Y/XmIn2e01C7cp8FhPiJQsmEBhTn/Aceo5QnN7g=
+    APP\_DEBUG=true
+    APP\_TIMEZONE=America/Sao\_Paulo
+    APP\_URL=http://localhost
+    
+    APP\_LOCALE=en
+    APP\_FALLBACK\_LOCALE=en
+    APP\_FAKER\_LOCALE=en\_US
+    
+    DB\_CONNECTION=mysql
+    DB\_HOST=127.0.0.1
+    DB\_PORT=3307
+    DB\_DATABASE=chat\_app
+    DB\_USERNAME=root
+    DB\_PASSWORD=root
+    
+    SESSION\_DRIVER=database
+    SESSION\_LIFETIME=120
+    
+    BROADCAST\_DRIVER=reverb
+    REVERB\_APP\_ID=600751
+    REVERB\_APP\_KEY=atf08xobqovoyb4numsu
+    REVERB\_APP\_SECRET=u7ja88wyahuj4jncr2uk
+    REVERB\_HOST=127.0.0.1
+    REVERB\_PORT=6001
+    REVERB\_SCHEME=http
+    
+    VITE\_REVERB\_APP\_KEY="atf08xobqovoyb4numsu"
+    VITE\_REVERB\_HOST="127.0.0.1"
+    VITE\_REVERB\_PORT="6001"
+    VITE\_REVERB\_SCHEME="http"
+    VITE\_PUSHER\_APP\_CLUSTER=mt1
+    
+    MAIL\_MAILER=log
+          
+    
+    Atualize as variáveis conforme necessário, especialmente as configurações de banco de dados e broadcasting.
     
 
 Configuração do Servidor de Broadcasting
 ----------------------------------------
 
-Este projeto utiliza o **Reverb** (um servidor compatível com Pusher) para o broadcast em tempo real. Certifique-se de que o servidor esteja rodando e configurado para ouvir na porta definida (por exemplo, `6001`).
+O sistema utiliza o **Reverb** para broadcast em tempo real. Certifique-se de que o servidor esteja rodando e configurado para escutar na porta definida (por exemplo, `6001`).
 
 Compilação dos Assets
 ---------------------
 
-1.  Para desenvolvimento:
+1.  **Para desenvolvimento:**
     
-        npm run dev
+    npm run dev
     
-2.  Para produção:
+2.  **Para produção:**
     
-        npm run build
+    npm run build
     
 
 Utilização
 ----------
 
-O sistema de chat é acessado através da rota `/chat` no seu navegador.
+Acesse o sistema pelo navegador através da rota `/chat`. Na interface do chat, você poderá:
 
-*   Ao acessar a rota, você verá a interface do chat.
-*   Digite seu nome e mensagem e clique em **Enviar**.
-*   As mensagens serão salvas no banco de dados e transmitidas em tempo real para todas as abas conectadas.
+*   Visualizar conversas públicas e privadas
+*   Selecionar usuários para iniciar conversas privadas
+*   Enviar mensagens de texto e anexos
+*   Acompanhar atualizações em tempo real
 
 Estrutura do Projeto
 --------------------
 
-*   `resources/js/app.js` - Ponto de entrada dos scripts do front-end.
-*   `resources/js/echo.js` - Configuração do Laravel Echo.
-*   `resources/js/bootstrap.js` - Configuração inicial (incluindo a importação do Pusher).
-*   `resources/views/livewire/chat.blade.php` - View do componente Livewire do chat.
-*   `app/Livewire/Chat.php` - Lógica do componente Livewire para o chat.
-*   `app/Events/MessageSent.php` - Evento broadcast para mensagens enviadas.
-*   `app/Http/Controllers/MessageController.php` - Endpoints para listar e (caso necessário) armazenar mensagens via API.
-*   `vite.config.js` - Configuração do Vite.
+*   `.env` – Arquivo de configuração do ambiente
+*   `app/Livewire/Chat/Chat.php` – Componente Livewire que gerencia a lógica do chat (envio, recebimento e exibição de mensagens)
+*   `app/Models/Message.php` – Modelo de mensagem com ID gerado via _Snowflake_
+*   `app/Models/User.php` – Modelo de usuário
+*   `app/Repositories/Chat/MessageRepository.php` – Repositório para consulta e manipulação de mensagens
+*   `app/Services/Chat/ChatService.php` – Serviço que gerencia o envio de mensagens e a emissão de eventos (como `MessageSent` e `UserTyping`)
+*   `resources/views/livewire/chat.blade.php` – View principal do chat, que inclui os componentes:
+    *   `components/chat/header.blade.php` – Cabeçalho do chat
+    *   `components/chat/footer.blade.php` – Rodapé com entrada de mensagens e anexos
+    *   `components/chat/message-list.blade.php` – Lista de mensagens
+    *   `components/chat/typing-indicator.blade.php` – Indicador de digitação
+    *   `components/chat/user-list.blade.php` – Lista de usuários
+*   `resources/js/app.js` – Ponto de entrada do JavaScript com integração do Alpine.js e funcionalidades do chat
+*   `resources/js/echo.js` – Configuração do Laravel Echo para broadcast em tempo real
+*   `vite.config.js` – Configuração do Vite para compilação dos assets
 
-Uso do Laravel Echo e Livewire
-------------------------------
+Como Funciona
+-------------
 
-O sistema utiliza **Laravel Echo** para ouvir eventos de broadcast e **Livewire** para atualizar dinamicamente a interface do chat. Confira os principais pontos:
+### Livewire & Laravel Echo
 
-*   Ao enviar uma mensagem, o componente Livewire cria a mensagem no banco e dispara o evento `MessageSent`.
-*   O Laravel Echo está configurado para escutar o canal `chat` e, ao receber o evento, emite um evento Livewire (`messageReceived`) para atualizar a interface.
-*   O componente Livewire possui um listener para o evento `messageReceived` que aciona a atualização das mensagens.
+O sistema utiliza **Livewire** para criar componentes dinâmicos e reativos. O componente `Chat` realiza:
 
-Depuração e Problemas Conhecidos
+*   Carregamento de mensagens públicas e privadas
+*   Envio de mensagens (texto e anexos)
+*   Seleção de usuários para conversas privadas
+*   Emissão de eventos, como `MessageSent`, `UserTyping` e `UserStoppedTyping`
+
+O **Laravel Echo** é configurado em `resources/js/echo.js` para escutar os canais de broadcast e atualizar a interface do chat em tempo real.
+
+Depuração e Solução de Problemas
 --------------------------------
 
-*   Se as mensagens não aparecem em tempo real, verifique:
-    *   Se o Laravel Echo está devidamente configurado e conectado (verifique o console do navegador).
-    *   Se o evento `MessageSent` está sendo disparado (utilize logs no servidor, se necessário).
-    *   Se o listener do Livewire (`messageReceived`) está registrado e acionando o método correto para recarregar as mensagens.
-*   Para problemas com CSRF em chamadas HTTP internas, considere desabilitar a verificação para rotas específicas ou enviar o token CSRF.
-*   Certifique-se de que as variáveis de ambiente estão sendo carregadas corretamente (lembre-se do prefixo `VITE_` para variáveis usadas pelo Vite).
+*   **Mensagens não atualizam em tempo real:**
+    *   Verifique se o Laravel Echo está corretamente configurado (consulte o console do navegador).
+    *   Confirme se os eventos de broadcast (`MessageSent` etc.) estão sendo disparados corretamente no servidor.
+    *   Certifique-se de que o servidor Reverb está ativo e configurado para a porta correta.
+*   **Problemas com CSRF:**
+    
+    Em caso de problemas com o token CSRF, ajuste as rotas ou garanta que o token seja enviado adequadamente nas chamadas HTTP.
+    
+*   **Variáveis de Ambiente:**
+    
+    Verifique se todas as variáveis (especialmente as que iniciam com `VITE_`) estão corretamente configuradas no `.env`.
+    
 
 Contribuição
 ------------
 
-Sinta-se à vontade para abrir issues ou enviar pull requests com melhorias e correções.
-
+Contribuições são sempre bem-vindas! Caso você encontre algum bug ou tenha sugestões de melhorias, abra uma issue ou envie um pull request.
 
 * * *
 
-Desenvolvido por Mateus Santiago- [GitHub](https://github.com/MathewSant)
+Desenvolvido por **Mateus Santiago** – [GitHub](https://github.com/MathewSant)
