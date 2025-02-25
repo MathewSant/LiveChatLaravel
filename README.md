@@ -1,6 +1,4 @@
-  Chat em Tempo Real – Sistema Moderno body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; background: #f9f9f9; color: #333; } h1, h2, h3 { color: #222; } pre { background: #eee; padding: 10px; border: 1px solid #ccc; overflow-x: auto; } code { background: #eee; padding: 2px 4px; } a { color: #1e90ff; text-decoration: none; } a:hover { text-decoration: underline; } hr { margin: 40px 0; border: none; border-top: 1px solid #ddd; }
-
-Chat em Tempo Real – Sistema Moderno
+Chat em Tempo Real
 ====================================
 
 Este projeto é um sistema de chat em tempo real desenvolvido em **Laravel** utilizando **Livewire**, **Laravel Echo** e o servidor de broadcasting **Reverb** (compatível com Pusher). Ele permite conversas públicas e privadas, envio de anexos e atualizações instantâneas na interface, proporcionando uma experiência interativa e moderna.
@@ -55,7 +53,7 @@ Instalação
     
     DB\_CONNECTION=mysql
     DB\_HOST=127.0.0.1
-    DB\_PORT=3307
+    DB\_PORT=3306
     DB\_DATABASE=chat\_app
     DB\_USERNAME=root
     DB\_PASSWORD=root
